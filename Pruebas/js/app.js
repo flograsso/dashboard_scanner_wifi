@@ -59,14 +59,56 @@ $(document).ready(function(){
 		}
 	});
 */
+	$("#busqueda_MAC").keyup(function() {
+		var valor=$("#busqueda_MAC").val();
+		$("#livesearch").html("");
+		$("#plot_button_from_search").hide();
+		$("#plot_button").show();
+		if (valor.length < 2 || valor=="")
+		{
+			$("#livesearch").html("");
+		}
+		else
+		{
+			$.ajax({
+				url: 'getMACS.php',
+				type: 'post',
+				datatype: 'json',
+				data: {'method':'searchMAC','MAC':valor},
+				success:  function (response) 
+				{
+					var cadena = "";
+					var count = 1;
+					cadena='<table class="table table-bordered"><tr>';
+					myObj = JSON.parse(response);
+					for (x in myObj) {
+							cadena=cadena+"<td>"+(myObj[x].MAC)+"</td>";
+							if((count % 5) == 0){
+								cadena=cadena+"</tr><tr>";
+								console.log("jump"+count);
+							}
+							count++;
+					}
+					cadena=cadena+"</tr></table>";
+
+					$("#livesearch").html(cadena);
+					$("#plot_button_from_search").show();
+					$("#plot_button").hide();
+					
+				}	
+			});
+		}
 
 
-	$("#plot_button").click(function() {
+	});
+
+	function plotRSSILine(_MAC,_desde,_hasta)
+	{
 		$.ajax({
 			url: 'getMACS.php',
 			type: 'post',
 			datatype: 'json',
-			data: {'method':'RSSIfromMAC','MAC':$("#macSelect").val(),'fecha_desde':$("#fecha_desde").val(),'fecha_hasta':$("#fecha_hasta").val()},
+			data: {'method':'RSSIfromMAC','MAC':_MAC,'fecha_desde':_desde,'fecha_hasta':_hasta},
 			success:  function (response) {
 				//console.log(response);
 				var time = []
@@ -154,7 +196,18 @@ $(document).ready(function(){
 			}
 		});
 			
+	}
+
+	$("#plot_button").click(function() 
+	{
+		plotRSSILine($("#macSelect").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
 	});
+
+	$("#plot_button_from_search").click(function() 
+	{
+		plotRSSILine($("#busqueda_MAC").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
+	});
+
 
 	function loadMACSBetween() {
 

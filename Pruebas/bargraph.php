@@ -7,6 +7,10 @@
                 width: auto;
                 height: auto;
             }
+            .table td.fit, .table th.fit {
+             white-space: nowrap;
+             width: 1%;
+            }
         </style>
         <!-- Bootstrap core CSS-->
         <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -24,12 +28,20 @@
 
                     <label for="sel1">MAC</label>
                     <?php
-							include("../selectBox.php");
-						?>
+							        include("../selectBox.php");
+                    ?>
+                    <label style="margin-top: 10px;" for="busqueda_MAC">Búsqueda de MAC:</label>
+                    <input type="busqueda_MAC" class="form-control" id="busqueda_MAC">
+                    
+                    
                 </div>
                 <div class="col-sm">
                     <label >Desde:</label>
                     <input class="form-control" type="datetime-local" id="fecha_desde">
+                    <button  style="margin-top: 40px;display: none;" type="button" class="btn btn-default" id="plot_button_from_search">Plot búsqueda</button>
+
+                    
+
                 </div>
                 <div class="col-sm">
                     <label >Hasta:</label>
@@ -37,6 +49,8 @@
                 </div>
 
             </div>
+              <br>
+              <div id="livesearch"></div>
             <br>
             <button type="button" class="btn btn-default" id="plot_button">Plot</button>
 
@@ -49,7 +63,7 @@
         <!-- Separacion entre grafico y controles -->
         <br><br><br>
         <!-- Separacion entre grafico y controles -->
-        
+
         <div class="row">
             <div class="col-xl-3 col-sm-6 mb-3">
                 <div class="card text-white bg-primary o-hidden ">

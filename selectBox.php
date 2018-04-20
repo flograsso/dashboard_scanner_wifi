@@ -6,7 +6,7 @@
     
 ?>
 
-<select class="form-control" name="MAC" id="macSelect">
+<select style= "height:35px;" class="form-control" name="MAC" id="macSelect">
     <?php
 		if ($result->num_rows > 0) 
 		{

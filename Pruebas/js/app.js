@@ -9,6 +9,7 @@ $(document).ready(function(){
 			}
 	});
 	loadMACSBetween();
+	plotChannelsBar();
 	
 
 
@@ -79,13 +80,12 @@ $(document).ready(function(){
 				{
 					var cadena = "";
 					var count = 1;
-					cadena='<table class="table table-bordered"><tr>';
+					cadena='<table class="table table-bordered""><tr">';
 					myObj = JSON.parse(response);
 					for (x in myObj) {
 							cadena=cadena+"<td>"+(myObj[x].MAC)+"</td>";
 							if((count % 5) == 0){
 								cadena=cadena+"</tr><tr>";
-								console.log("jump"+count);
 							}
 							count++;
 					}
@@ -101,6 +101,9 @@ $(document).ready(function(){
 
 
 	});
+
+
+
 
 	function plotRSSILine(_MAC,_desde,_hasta)
 	{
@@ -233,7 +236,100 @@ $(document).ready(function(){
 		setTimeout(loadMACSBetween, 3000); // you could choose not to continue on failure...
 	}
 
+
+
 });
+
+
+
+function plotChannelsBar()
+{
+	$.ajax({
+		url: 'getMACS.php',
+		type: 'post',
+		datatype: 'json',
+		data: {'method':'getChannels'},
+		success:  function (response) {
+			console.log(response);
+			var channel = []
+			var count = [];				
+			myObj = JSON.parse(response);
+			for (x in myObj) {
+				channel.push(myObj[x].channel);
+				count.push(Number(myObj[x].count));
+			}
+
+			var chartdata = 
+			{
+				type: 'bar',
+				data: {
+					labels:channel,
+	
+					datasets: [{
+						data: count,
+						label: "Paquetes",
+					}],
+				},
+				options: {
+					scales: {
+						yAxes: [{
+							ticks: {
+								beginAtZero: true
+							}
+						}],
+					}
+				}
+			};
+
+			var ctx = $('#plotchannels');
+			//Esta linea es para que el grafico no muestre valores viejos. (una especie de lag)
+			plotchannels && plotchannels.chart && plotchannels.chart.destroy();
+			plotchannels = new Chart(ctx,chartdata);
+
+		}
+	});
+		
+}
+
+function plotChannelsPie()
+{
+	$.ajax({
+		url: 'getMACS.php',
+		type: 'post',
+		datatype: 'json',
+		data: {'method':'getChannels'},
+		success:  function (response) {
+			console.log(response);
+			var channel = []
+			var count = [];				
+			myObj = JSON.parse(response);
+			for (x in myObj) {
+				channel.push(myObj[x].channel);
+				count.push(Number(myObj[x].count));
+			}
+
+			var chartdata = 
+			{
+				type: 'pie',
+				data: {
+					labels:channel,
+	
+					datasets: [{
+						data: count,
+					}],
+				}
+
+			};
+
+			var ctx = $('#plotchannels');
+			//Esta linea es para que el grafico no muestre valores viejos. (una especie de lag)
+			plotchannels && plotchannels.chart && plotchannels.chart.destroy();
+			plotchannels = new Chart(ctx,chartdata);
+
+		}
+	});
+		
+}
 
 
 

@@ -75,6 +75,20 @@ switch ($METHOD)
 		//now print the data
 		echo json_encode($outp);
 		break;
+		
+	case "getChannels":
+		$sql="SELECT `channel`,COUNT(DISTINCT(MAC)) AS 'count' FROM `data` GROUP BY `channel`";
+		//execute query
+		$result = $conn->query($sql);
+		$outp = array();
+		$outp = $result->fetch_all(MYSQLI_ASSOC);
+		//free memory associated with result
+		$result->close();
+		//close connection
+		$conn->close();
+		//now print the data
+		echo json_encode($outp);
+		break;
 
 	default:
 		break;

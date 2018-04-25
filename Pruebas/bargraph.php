@@ -30,7 +30,7 @@
             </h1>
             <hr>
             <div class="panel panel-default">
-                <div class="panel-heading">Ploteo de MAC</div>
+                <div class="panel-heading"><b>Ploteo de MAC</b></div>
                 <div class="panel-body">
                     <div class="row">
 
@@ -53,10 +53,21 @@
                                 class="btn btn-default"
                                 id="plot_button_from_search">Plot búsqueda</button>
 
+
                         </div>
+
                         <div class="col-sm">
                             <label >Hasta:</label>
                             <input class="form-control" type="datetime-local" id="fecha_hasta">
+                            
+                            <label style="margin-top:10px;" for="sel1">Device</label>
+                            <select style= "height:35px; " class="form-control" name="deviceSelect" id="deviceSelect">
+                                <option value="1">ESP32</option>
+                                <option value="2">ESP8266</option>
+                                <option value="%">All</option>
+
+                            </select>
+
                         </div>
 
                     </div>
@@ -72,7 +83,7 @@
             </div>
 
             <div class="panel panel-default">
-                <div class="panel-heading">Indicadores</div>
+                <div class="panel-heading"><b>Indicadores</b></div>
                 <div class="panel-body">
                     <div style="margin-top: 40px;" class="row">
                         <div class="col-xl-3 col-sm-6 mb-3">
@@ -130,11 +141,18 @@
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading">Canales WiFi</div>
+                <div class="panel-heading"><b>Canales WiFi</b></div>
                 <div class="panel-body">
                     <div id="chart-container">
                         <canvas id="plotchannels"></canvas>
                     </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>MAC Vendors</b></div>
+                <div class="panel-body">
+                    <div id="macVendorTable"> </div>
                 </div>
             </div>
 

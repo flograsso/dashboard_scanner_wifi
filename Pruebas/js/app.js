@@ -10,8 +10,14 @@ $(document).ready(function(){
 	});
 	loadMACSBetween();
 	plotChannelsBar();
+	macVendorTable();
 	
 
+	$("#deviceSelect").change(function() {
+		loadMACSBetween();
+		plotChannelsBar();
+		macVendorTable();
+	});
 
 	/*	
 	$.ajax({
@@ -111,7 +117,7 @@ $(document).ready(function(){
 			url: 'getMACS.php',
 			type: 'post',
 			datatype: 'json',
-			data: {'method':'RSSIfromMAC','MAC':_MAC,'fecha_desde':_desde,'fecha_hasta':_hasta},
+			data: {'method':'RSSIfromMAC','MAC':_MAC,'fecha_desde':_desde,'fecha_hasta':_hasta,'device':$("#deviceSelect").val()},
 			success:  function (response) {
 				//console.log(response);
 				var time = []
@@ -129,7 +135,8 @@ $(document).ready(function(){
 						labels:time,
 						datasets: [{
 							data: rssi,
-							label: "(-1)*rssi",
+							label: "rssi+100",
+							
 						}],
 						/*
 						datasets: [{
@@ -203,6 +210,7 @@ $(document).ready(function(){
 
 	$("#plot_button").click(function() 
 	{
+
 		plotRSSILine($("#macSelect").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
 	});
 
@@ -218,7 +226,7 @@ $(document).ready(function(){
 			url: 'getMACS.php',
 				type: 'post',
 				datatype: 'json',
-				data: {'method':'getNumbersNews'},
+				data: {'method':'getNumbersNews','device':$("#deviceSelect").val()},
 				success:  function (response) {
 					$('#novedades').text(response);
 				}
@@ -227,7 +235,7 @@ $(document).ready(function(){
 			url: 'getMACS.php',
 				type: 'post',
 				datatype: 'json',
-				data: {'method':'getNumberofMACS'},
+				data: {'method':'getNumberofMACS','device':$("#deviceSelect").val()},
 				success:  function (response) {
 					$('#macsTotales').text(response);
 				}
@@ -248,7 +256,7 @@ function plotChannelsBar()
 		url: 'getMACS.php',
 		type: 'post',
 		datatype: 'json',
-		data: {'method':'getChannels'},
+		data: {'method':'getChannels','device':$("#deviceSelect").val()},
 		success:  function (response) {
 			console.log(response);
 			var channel = []
@@ -268,6 +276,7 @@ function plotChannelsBar()
 					datasets: [{
 						data: count,
 						label: "Paquetes",
+						
 					}],
 				},
 				options: {
@@ -288,6 +297,39 @@ function plotChannelsBar()
 
 		}
 	});
+	setTimeout(plotChannelsBar, 60000); // you could choose not to continue on failure...
+}
+
+function macVendorTable()
+{
+	$.ajax({
+		url: 'getMACS.php',
+		type: 'post',
+		datatype: 'json',
+		data: {'method':'getStatsVendors','device':$("#deviceSelect").val()},
+		success:  function (response) {
+			console.log($("#deviceSelect").val());
+	
+
+			var cadena = "";
+			cadena='<table class="table table-striped">';
+			cadena=cadena+'<thead><tr><th>Vendor</th><th>Count</th></tr></thead>';
+			cadena=cadena+'<tbody>'
+			myObj = JSON.parse(response);
+			for (x in myObj) {
+					cadena=cadena+'<tr>'
+					cadena=cadena+"<td>"+(myObj[x].mac_vendor)+"</td>";
+					cadena=cadena+"<td>"+(myObj[x].count)+"</td>";
+					cadena=cadena+'</tr>';
+					
+			}
+			cadena=cadena+"</tbody></table>";
+
+			$("#macVendorTable").html(cadena);
+
+		}
+	});
+	setTimeout(macVendorTable, 60000); // you could choose not to continue on failure...
 		
 }
 

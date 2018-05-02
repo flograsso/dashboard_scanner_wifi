@@ -1,23 +1,49 @@
 $(document).ready(function(){
-	$.ajax({
-		url: 'getMACS.php',
-			type: 'post',
-			datatype: 'json',
-			data: {'method':'getNumberofMACS'},
-			success:  function (response) {
-				$('#macsTotales').text(response);
-			}
-	});
+
+	var lastRSSIPlotMethod = null;
+
+
+
 	loadMACSBetween();
 	plotChannelsBar();
 	macVendorTable();
 	
 
+	//Reploteo si cambia el device
 	$("#deviceSelect").change(function() {
 		loadMACSBetween();
 		plotChannelsBar();
 		macVendorTable();
+		if (lastRSSIPlotMethod == "plotFromSelect")
+			plotRSSILine($("#macSelect").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
+		else
+			plotRSSILine($("#busqueda_MAC").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
+
 	});
+
+	$("#fecha_desde").change(function() {
+		loadMACSBetween();
+		plotChannelsBar();
+		macVendorTable();
+		if (lastRSSIPlotMethod == "plotFromSelect")
+			plotRSSILine($("#macSelect").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
+		else
+			plotRSSILine($("#busqueda_MAC").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
+
+	});
+
+	$("#fecha_hasta").change(function() {
+		loadMACSBetween();
+		plotChannelsBar();
+		macVendorTable();
+		if (lastRSSIPlotMethod == "plotFromSelect")
+			plotRSSILine($("#macSelect").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
+		else
+			plotRSSILine($("#busqueda_MAC").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
+
+	});
+
+
 
 	/*	
 	$.ajax({
@@ -136,6 +162,9 @@ $(document).ready(function(){
 						datasets: [{
 							data: rssi,
 							label: "rssi+100",
+							backgroundColor: "rgba(241, 0, 0, 1)",
+							borderColor: "rgba(241, 0, 0, 1)",
+							fill:false,
 							
 						}],
 						/*
@@ -210,12 +239,14 @@ $(document).ready(function(){
 
 	$("#plot_button").click(function() 
 	{
-
+		lastRSSIPlotMethod="plotFromSelect";
 		plotRSSILine($("#macSelect").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
+
 	});
 
 	$("#plot_button_from_search").click(function() 
 	{
+		lastRSSIPlotMethod="plotFromSearch";
 		plotRSSILine($("#busqueda_MAC").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
 	});
 
@@ -226,18 +257,19 @@ $(document).ready(function(){
 			url: 'getMACS.php',
 				type: 'post',
 				datatype: 'json',
-				data: {'method':'getNumbersNews','device':$("#deviceSelect").val()},
+				data: {'method':'getNumberofMACS','device':$("#deviceSelect").val(),'fecha_desde':$("#fecha_desde").val(),'fecha_hasta':$("#fecha_hasta").val()},
 				success:  function (response) {
-					$('#novedades').text(response);
+					$('#macsTotales').text(response);
 				}
 		});
+
 		$.ajax({
 			url: 'getMACS.php',
 				type: 'post',
 				datatype: 'json',
-				data: {'method':'getNumberofMACS','device':$("#deviceSelect").val()},
+				data: {'method':'getNumbersNews','device':$("#deviceSelect").val()},
 				success:  function (response) {
-					$('#macsTotales').text(response);
+					$('#novedades').text(response);
 				}
 		});
 
@@ -256,7 +288,7 @@ function plotChannelsBar()
 		url: 'getMACS.php',
 		type: 'post',
 		datatype: 'json',
-		data: {'method':'getChannels','device':$("#deviceSelect").val()},
+		data: {'method':'getChannels','device':$("#deviceSelect").val(),'fecha_desde':$("#fecha_desde").val(),'fecha_hasta':$("#fecha_hasta").val()},
 		success:  function (response) {
 			console.log(response);
 			var channel = []
@@ -306,7 +338,7 @@ function macVendorTable()
 		url: 'getMACS.php',
 		type: 'post',
 		datatype: 'json',
-		data: {'method':'getStatsVendors','device':$("#deviceSelect").val()},
+		data: {'method':'getStatsVendors','device':$("#deviceSelect").val(),'fecha_desde':$("#fecha_desde").val(),'fecha_hasta':$("#fecha_hasta").val()},
 		success:  function (response) {
 			console.log($("#deviceSelect").val());
 	

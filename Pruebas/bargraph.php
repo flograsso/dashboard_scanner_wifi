@@ -29,8 +29,50 @@
                 Wifi Scanner
             </h1>
             <hr>
+
+            <!-- PANEL DE CONTROL-->
             <div class="panel panel-default">
-                <div class="panel-heading"><b>Ploteo de MAC</b></div>
+                <div class="panel-heading">
+                    <b>Variables</b>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+
+                        <div class="col-sm">
+                            <label >Desde:</label>
+                            <input class="form-control" type="datetime-local" id="fecha_desde">
+
+                        </div>
+
+                        <div class="col-sm">
+                            <label >Hasta:</label>
+                            <input class="form-control" type="datetime-local" id="fecha_hasta">
+
+                            <label style="margin-top:10px;" for="sel1">Device</label>
+                            <select
+                                style="height:35px; "
+                                class="form-control"
+                                name="deviceSelect"
+                                id="deviceSelect">
+                                <option value="1">ESP32</option>
+                                <option value="2">ESP8266</option>
+                                <option value="%">All</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <!-- FIN PANEL DE CONTROL-->
+
+            <!-- PLOTEO DE MAC-->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <b>Ploteo de MAC</b>
+                </div>
                 <div class="panel-body">
                     <div class="row">
 
@@ -44,46 +86,31 @@
                             <input type="busqueda_MAC" class="form-control" id="busqueda_MAC">
 
                         </div>
-                        <div class="col-sm">
-                            <label >Desde:</label>
-                            <input class="form-control" type="datetime-local" id="fecha_desde">
-                            <button
-                                style="margin-top: 40px;display: none;"
-                                type="button"
-                                class="btn btn-default"
-                                id="plot_button_from_search">Plot búsqueda</button>
-
-
-                        </div>
-
-                        <div class="col-sm">
-                            <label >Hasta:</label>
-                            <input class="form-control" type="datetime-local" id="fecha_hasta">
-                            
-                            <label style="margin-top:10px;" for="sel1">Device</label>
-                            <select style= "height:35px; " class="form-control" name="deviceSelect" id="deviceSelect">
-                                <option value="1">ESP32</option>
-                                <option value="2">ESP8266</option>
-                                <option value="%">All</option>
-
-                            </select>
-
-                        </div>
 
                     </div>
+                    <button
+                        style="margin-top: 20px;margin-bottom: 20px;display: none;"
+                        type="button"
+                        class="btn btn-success btn-lg"
+                        id="plot_button_from_search">Plot búsqueda</button>
+                    
                     <br>
                     <div id="livesearch"></div>
                     <br>
-                    <button type="button" class="btn btn-default" id="plot_button">Plot</button>
-                    <hr>
+                    <button type="button" class="btn btn-success btn-lg" id="plot_button">Plot</button>
+     
                     <div id="chart-container">
                         <canvas id="plotrssi"></canvas>
                     </div>
                 </div>
             </div>
+            <!-- FIN PLOTEO DE MAC-->
 
+            <!-- PANEL DE CONTROL-->
             <div class="panel panel-default">
-                <div class="panel-heading"><b>Indicadores</b></div>
+                <div class="panel-heading">
+                    <b>Indicadores</b>
+                </div>
                 <div class="panel-body">
                     <div style="margin-top: 40px;" class="row">
                         <div class="col-xl-3 col-sm-6 mb-3">
@@ -94,8 +121,7 @@
                                 <h2 id="macsTotales" align='center'></h2>
 
                             </div>
-                            <label >Hasta:</label>
-                            <input class="form-control" type="datetime-local" id="fecha_hasta">
+              
                         </div>
                         <div class="col-xl-3 col-sm-6 mb-3">
                             <div class="card text-white bg-warning o-hidden ">
@@ -140,21 +166,32 @@
                     </div>
                 </div>
             </div>
+            <!-- FIN PANEL DE CONTROL-->
+
+
+            <!-- CANALES WIFI-->
             <div class="panel panel-default">
-                <div class="panel-heading"><b>Canales WiFi</b></div>
+                <div class="panel-heading">
+                    <b>Canales WiFi</b>
+                </div>
                 <div class="panel-body">
                     <div id="chart-container">
                         <canvas id="plotchannels"></canvas>
                     </div>
                 </div>
             </div>
+            <!-- FIN CANALES WIFI-->
 
+             <!-- MAC VENDORS-->
             <div class="panel panel-default">
-                <div class="panel-heading"><b>MAC Vendors</b></div>
+                <div class="panel-heading">
+                    <b>MAC Vendors</b>
+                </div>
                 <div class="panel-body">
-                    <div id="macVendorTable"> </div>
+                    <div id="macVendorTable"></div>
                 </div>
             </div>
+            <!-- FIN MAC VENDORS-->
 
         </div>
 

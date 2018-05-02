@@ -43,9 +43,30 @@ switch ($METHOD)
 		echo json_encode($outp);
 		
 		break;
+
 	case "getNumberofMACS":
 		$device=$_POST["device"];
-		$sql = "SELECT COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE `device` LIKE '$device'";
+		$fecha_desde=$_POST["fecha_desde"];
+		$fecha_hasta=$_POST["fecha_hasta"];
+
+
+		if ($fecha_desde!= "" && $fecha_hasta!= ""){
+			//query to get data from the table
+			$sql = "SELECT COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE `device` LIKE '$device' AND (time BETWEEN '$fecha_desde' AND '$fecha_hasta')";
+		}
+		elseif  ($fecha_desde != ""){
+			$sql = "SELECT COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE `device` LIKE '$device' AND time >'$fecha_desde'";
+		}
+		elseif ($fecha_hasta != ""){
+			$sql = "SELECT COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE `device` LIKE '$device' AND time <'$fecha_hasta'";
+	
+		}
+		else{
+			$sql = "SELECT COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE `device` LIKE '$device'";
+		}
+
+
+		
 		$result = $conn->query($sql);
 		$outp = array();
 		$row = $result->fetch_assoc();
@@ -81,7 +102,29 @@ switch ($METHOD)
 		
 	case "getChannels":
 		$device=$_POST["device"];
-		$sql="SELECT `channel`,COUNT(DISTINCT(MAC)) AS 'count' FROM `data` WHERE  `device` LIKE '$device' GROUP BY `channel`";
+		$fecha_desde=$_POST["fecha_desde"];
+		$fecha_hasta=$_POST["fecha_hasta"];
+
+
+		if ($fecha_desde!= "" && $fecha_hasta!= ""){
+			//query to get data from the table
+			$sql="SELECT `channel`,COUNT(DISTINCT(MAC)) AS 'count' FROM `data` WHERE  `device` LIKE '$device' AND (time BETWEEN '$fecha_desde' AND '$fecha_hasta') GROUP BY `channel`";
+
+		}
+		elseif  ($fecha_desde != ""){
+			$sql="SELECT `channel`,COUNT(DISTINCT(MAC)) AS 'count' FROM `data` WHERE  `device` LIKE '$device' AND time >'$fecha_desde' GROUP BY `channel`";
+
+		}
+		elseif ($fecha_hasta != ""){
+			$sql="SELECT `channel`,COUNT(DISTINCT(MAC)) AS 'count' FROM `data` WHERE  `device` LIKE '$device' AND time <'$fecha_hasta' GROUP BY `channel`";
+
+	
+		}
+		else{
+			$sql="SELECT `channel`,COUNT(DISTINCT(MAC)) AS 'count' FROM `data` WHERE  `device` LIKE '$device' GROUP BY `channel`";
+		}
+
+
 		//execute query
 		$result = $conn->query($sql);
 		$outp = array();
@@ -96,7 +139,30 @@ switch ($METHOD)
 
 	case "getStatsVendors":
 		$device=$_POST["device"];
-		$sql="SELECT `mac_vendor`,COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE `device` LIKE '$device' GROUP BY `mac_vendor` ORDER BY `count` DESC ";
+		$fecha_desde=$_POST["fecha_desde"];
+		$fecha_hasta=$_POST["fecha_hasta"];
+
+		if ($fecha_desde!= "" && $fecha_hasta!= ""){
+			//query to get data from the table
+			$sql="SELECT `mac_vendor`,COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE `device` LIKE '$device' AND (time BETWEEN '$fecha_desde' AND '$fecha_hasta') GROUP BY `mac_vendor` ORDER BY `count` DESC ";
+
+		}
+		elseif  ($fecha_desde != ""){
+			$sql="SELECT `mac_vendor`,COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE `device` LIKE '$device' AND time >'$fecha_desde' GROUP BY `mac_vendor` ORDER BY `count` DESC ";
+
+		}
+		elseif ($fecha_hasta != ""){
+			$sql="SELECT `mac_vendor`,COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE `device` LIKE '$device' AND time <'$fecha_hasta' GROUP BY `mac_vendor` ORDER BY `count` DESC ";
+
+	
+		}
+		else{
+
+			$sql="SELECT `mac_vendor`,COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE `device` LIKE '$device' GROUP BY `mac_vendor` ORDER BY `count` DESC ";
+		}
+
+
+		
 		//execute query
 		$result = $conn->query($sql);
 		$outp = array();

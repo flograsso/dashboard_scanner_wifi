@@ -1,20 +1,69 @@
-<?php
-//setting header to json
-include("connection.php");
-$sql ="SELECT * FROM `data` WHERE `device`=1 LIMIT 5;SELECT * FROM `data` WHERE `device`=2 LIMIT 5;";
-//execute query
-$json="";
-if (!$result = $conn->multi_query($sql))
-	echo "Falló la multiconsulta: (" . $mysqli->errno . ") " . $mysqli->error;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <style type="text/css">
+            #chart-container {
+                width: auto;
+                height: auto;
+            }
+            .table td.fit,
+            .table th.fit {
+                white-space: nowrap;
+                width: 1%;
+            }
+        </style>
+    
 
-	do {
-		if ($resultado = $conn->store_result()) {
-			$outp = $resultado->fetch_all(MYSQLI_ASSOC);
-			$json=$json.json_encode($outp);
-		}
-	} while ($conn->more_results() && $conn->next_result());
+        <style type="text/css">
+            #chart-container {
+                width: auto;
+                height: auto;
+            }
+            .table td.fit,
+            .table th.fit {
+                white-space: nowrap;
+                width: 1%;
+            }
+        </style>
+    
 
+        <!-- Bootstrap core CSS-->
+        <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Custom fonts for this template-->
+        <link
+            href="../vendor/font-awesome/css/font-awesome.min.css"
+            rel="stylesheet"
+            type="text/css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script
+            language="JavaScript"
+            type="text/javascript"
+            src="../vendor/jquery/jquery.min.js"></script>
+   
+  
+</head>
+<body>
 
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">WebSiteName</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Home</a></li>
+      <li><a href="#">Page 1</a></li>
+      <li><a href="#">Page 2</a></li>
+      <li><a href="#">Page 3</a></li>
+    </ul>
+  </div>
+</nav>
+  
+<div class="container">
+  <h3>Basic Navbar Example</h3>
+  <p>A navigation bar is a navigation header that is placed at the top of the page.</p>
+</div>
 
-echo $json;
-?>
+</body>
+</html>

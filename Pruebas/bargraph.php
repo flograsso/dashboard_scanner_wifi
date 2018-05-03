@@ -13,6 +13,21 @@
                 width: 1%;
             }
         </style>
+
+          <style>
+  /* Note: Try to remove the following lines to see the effect of CSS positioning */
+  .affix {
+      top: 0;
+      width: 100%;
+      z-index: 9999 !important;
+  }
+
+  .affix + .container-fluid {
+      padding-top: 70px;
+  }
+  </style>
+
+
         <!-- Bootstrap core CSS-->
         <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <!-- Custom fonts for this template-->
@@ -23,22 +38,63 @@
     </head>
 
     <body>
+        
+    <nav class="navbar navbar-default" data-spy="affix" >
+    <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" >Wifi Scanner</a>
+    </div>
+    <div class="row">
+
+<div class="col-xs"style="margin-top: 17px;margin-right:10px;">
+    <label >Desde:</label>
+    </div>
+    <div class="col-xs"style="margin-top: 10px;margin-right:10px;">
+    <input class="form-control" type="datetime-local" id="fecha_desde">
+
+</div>
+
+<div class="col-xs"style="margin-top: 17px;margin-right:10px;">
+    <label >Hasta:</label>
+</div>
+<div class="col-xs"style="margin-top: 10px;margin-right:10px;">
+    <input class="form-control" type="datetime-local" id="fecha_hasta">
+
+</div>
+
+<div class="col-xs"style="margin-top: 17px;margin-right:10px;">
+    <label  for="sel1">Device</label>
+    </div>
+    <div class="col-xs"style="margin-top: 10px;margin-right:10px;">
+    <select
+        style="height:35px; "
+        class="form-control"
+        name="deviceSelect"
+        id="deviceSelect">
+        <option value="1">ESP32</option>
+        <option value="2">ESP8266</option>
+        <option value="%">All</option>
+
+    </select>
+</div>
+
+</div>
+  </div>
+    </nav>
 
         <div class="container">
-            <h1>
-                Wifi Scanner
-            </h1>
+
             <hr>
 
             <!-- PANEL DE CONTROL-->
-            <div class="panel panel-default">
+            <div class="panel panel-default" style="margin-top: 80px;">
                 <div class="panel-heading">
                     <b>Variables</b>
                 </div>
                 <div class="panel-body">
                     <div class="row">
 
-                        <div class="col-sm">
+                        <div class="col-sm" >
                             <label >Desde:</label>
                             <input class="form-control" type="datetime-local" id="fecha_desde">
 
@@ -48,7 +104,10 @@
                             <label >Hasta:</label>
                             <input class="form-control" type="datetime-local" id="fecha_hasta">
 
-                            <label style="margin-top:10px;" for="sel1">Device</label>
+                        </div>
+
+                        <div class="col-sm">
+                            <label  for="sel1">Device</label>
                             <select
                                 style="height:35px; "
                                 class="form-control"
@@ -59,7 +118,6 @@
                                 <option value="%">All</option>
 
                             </select>
-
                         </div>
 
                     </div>
@@ -93,12 +151,12 @@
                         type="button"
                         class="btn btn-success btn-lg"
                         id="plot_button_from_search">Plot búsqueda</button>
-                    
+
                     <br>
                     <div id="livesearch"></div>
                     <br>
                     <button type="button" class="btn btn-success btn-lg" id="plot_button">Plot</button>
-     
+
                     <div id="chart-container">
                         <canvas id="plotrssi"></canvas>
                     </div>
@@ -121,7 +179,7 @@
                                 <h2 id="macsTotales" align='center'></h2>
 
                             </div>
-              
+
                         </div>
                         <div class="col-xl-3 col-sm-6 mb-3">
                             <div class="card text-white bg-warning o-hidden ">
@@ -168,7 +226,6 @@
             </div>
             <!-- FIN PANEL DE CONTROL-->
 
-
             <!-- CANALES WIFI-->
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -182,7 +239,7 @@
             </div>
             <!-- FIN CANALES WIFI-->
 
-             <!-- MAC VENDORS-->
+            <!-- MAC VENDORS-->
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <b>MAC Vendors</b>
@@ -206,6 +263,8 @@
             type="text/javascript"
             src="../vendor/chart.js/Chart.min.js"></script>
         <script language="JavaScript" type="text/javascript" src="js/app.js"></script>
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <link
             rel="stylesheet"
             href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">

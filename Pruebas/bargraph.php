@@ -14,19 +14,18 @@
             }
         </style>
 
-          <style>
-  /* Note: Try to remove the following lines to see the effect of CSS positioning */
-  .affix {
-      top: 0;
-      width: 100%;
-      z-index: 9999 !important;
-  }
+        <style>
+            /* Note: Try to remove the following lines to see the effect of CSS positioning */
+            .affix {
+                top: 0;
+                width: 100%;
+                z-index: 9999 !important;
+            }
 
-  .affix + .container-fluid {
-      padding-top: 70px;
-  }
-  </style>
-
+            .affix + .container-fluid {
+                padding-top: 70px;
+            }
+        </style>
 
         <!-- Bootstrap core CSS-->
         <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -38,49 +37,49 @@
     </head>
 
     <body>
-        
-    <nav class="navbar navbar-default" data-spy="affix" >
-    <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" >Wifi Scanner</a>
-    </div>
-    <div class="row">
 
-<div class="col-xs"style="margin-top: 17px;margin-right:10px;">
-    <label >Desde:</label>
-    </div>
-    <div class="col-xs"style="margin-top: 10px;margin-right:10px;">
-    <input class="form-control" type="datetime-local" id="fecha_desde">
+        <nav class="navbar navbar-default" data-spy="affix">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">Wifi Scanner</a>
+                </div>
+                <div class="row">
 
-</div>
+                    <div class="col-xs" style="margin-top: 17px;margin-right:10px;">
+                        <label >Desde:</label>
+                    </div>
+                    <div class="col-xs" style="margin-top: 10px;margin-right:10px;">
+                        <input class="form-control" type="datetime-local" id="fecha_desde">
 
-<div class="col-xs"style="margin-top: 17px;margin-right:10px;">
-    <label >Hasta:</label>
-</div>
-<div class="col-xs"style="margin-top: 10px;margin-right:10px;">
-    <input class="form-control" type="datetime-local" id="fecha_hasta">
+                    </div>
 
-</div>
+                    <div class="col-xs" style="margin-top: 17px;margin-right:10px;">
+                        <label >Hasta:</label>
+                    </div>
+                    <div class="col-xs" style="margin-top: 10px;margin-right:10px;">
+                        <input class="form-control" type="datetime-local" id="fecha_hasta">
 
-<div class="col-xs"style="margin-top: 17px;margin-right:10px;">
-    <label  for="sel1">Device</label>
-    </div>
-    <div class="col-xs"style="margin-top: 10px;margin-right:10px;">
-    <select
-        style="height:35px; "
-        class="form-control"
-        name="deviceSelect"
-        id="deviceSelect">
-        <option value="1">ESP32</option>
-        <option value="2">ESP8266</option>
-        <option value="%">All</option>
+                    </div>
 
-    </select>
-</div>
+                    <div class="col-xs" style="margin-top: 17px;margin-right:10px;">
+                        <label for="sel1">Device</label>
+                    </div>
+                    <div class="col-xs" style="margin-top: 10px;margin-right:10px;">
+                        <select
+                            style="height:35px; "
+                            class="form-control"
+                            name="deviceSelect"
+                            id="deviceSelect">
+                            <option value="1">ESP32</option>
+                            <option value="2">ESP8266</option>
+                            <option value="%">All</option>
 
-</div>
-  </div>
-    </nav>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+        </nav>
 
         <div class="container">
 
@@ -94,7 +93,7 @@
                 <div class="panel-body">
                     <div class="row">
 
-                        <div class="col-sm" >
+                        <div class="col-sm">
                             <label >Desde:</label>
                             <input class="form-control" type="datetime-local" id="fecha_desde">
 
@@ -107,7 +106,7 @@
                         </div>
 
                         <div class="col-sm">
-                            <label  for="sel1">Device</label>
+                            <label for="sel1">Device</label>
                             <select
                                 style="height:35px; "
                                 class="form-control"
@@ -146,17 +145,34 @@
                         </div>
 
                     </div>
-                    <button
-                        style="margin-top: 20px;margin-bottom: 20px;display: none;"
-                        type="button"
-                        class="btn btn-success btn-lg"
-                        id="plot_button_from_search">Plot búsqueda</button>
 
+                    <div class="row">
+                        <div class="col-sm">
+                            <button
+                                type="button"
+                                class="btn btn-success btn-lg"
+                                style="margin-top: 20px;margin-bottom: 20px;"
+                                id="plot_button">Plot</button>
+                            <button
+                                style="margin-top: 20px;margin-bottom: 20px;display: none;"
+                                type="button"
+                                class="btn btn-success btn-lg"
+                                id="plot_button_from_search">Plot búsqueda</button>
+                        </div>
+                        <div class="col-sm">
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div style="margin-top: 25px;" id="macVendor"></div>
+                                </div>
+                                 <div class="col-sm">
+                                    <div style="margin-top: 25px;" id="lastChannel"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <br>
                     <div id="livesearch"></div>
                     <br>
-                    <button type="button" class="btn btn-success btn-lg" id="plot_button">Plot</button>
-
                     <div id="chart-container">
                         <canvas id="plotrssi"></canvas>
                     </div>

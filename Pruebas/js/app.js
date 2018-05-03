@@ -234,7 +234,9 @@ $(document).ready(function(){
 
 			}
 		});
-			
+		getMacLastChannel(_MAC);
+		getMacVendor(_MAC);
+
 	}
 
 	$("#plot_button").click(function() 
@@ -329,7 +331,41 @@ function plotChannelsBar()
 
 		}
 	});
+
 	setTimeout(plotChannelsBar, 60000); // you could choose not to continue on failure...
+}
+
+function getMacVendor(_MAC)
+{
+	$.ajax({
+		url: 'getMACS.php',
+		type: 'post',
+		datatype: 'json',
+		data: {'method':'getVendorFromMAC','device':$("#deviceSelect").val(),'MAC':_MAC},
+		success:  function (response) {
+						
+			myObj = JSON.parse(response);
+			var vendor=myObj[0].mac_vendor;
+			var cadena = "<b>MAC vendor: </b>"+vendor;
+			$("#macVendor").html(cadena);
+		}
+	});
+}
+
+function getMacLastChannel(_MAC)
+{
+	$.ajax({
+		url: 'getMACS.php',
+		type: 'post',
+		datatype: 'json',
+		data: {'method':'getlastChannelFromMAC','device':$("#deviceSelect").val(),'MAC':_MAC},
+		success:  function (response) {
+			myObj = JSON.parse(response);
+			var channel=myObj[0].channel;
+			var cadena = "<b>Last Channel: </b>"+channel;
+			$("#lastChannel").html(cadena);
+		}
+	});
 }
 
 function macVendorTable()

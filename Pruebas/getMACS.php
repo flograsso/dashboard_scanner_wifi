@@ -174,6 +174,41 @@ switch ($METHOD)
 		//now print the data
 		echo json_encode($outp);
 		break;
+
+	case "getVendorFromMAC":
+		$device=$_POST["device"];
+		$MAC = trim($_POST["MAC"]);
+		$sql ="SELECT `mac_vendor` FROM `data` WHERE MAC='$MAC' AND device='$device' LIMIT 1";
+		//execute query
+		$result = $conn->query($sql);
+		$outp = array();
+		$outp = $result->fetch_all(MYSQLI_ASSOC);
+		//free memory associated with result
+		$result->close();
+		//close connection
+		$conn->close();
+		//now print the data
+		echo json_encode($outp);
+		break;
+
+		
+
+	case "getlastChannelFromMAC":
+		$device=$_POST["device"];
+		$MAC = trim($_POST["MAC"]);
+		$sql ="SELECT time AS fecha,`channel` FROM `data` WHERE MAC='$MAC' AND device='$device' GROUP BY fecha DESC LIMIT 1";
+		//execute query
+		$result = $conn->query($sql);
+		$outp = array();
+		$outp = $result->fetch_all(MYSQLI_ASSOC);
+		//free memory associated with result
+		$result->close();
+		//close connection
+		$conn->close();
+		//now print the data
+		echo json_encode($outp);
+		break;
+
 	default:
 		break;
 

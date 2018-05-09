@@ -1,7 +1,8 @@
+
 $(document).ready(function(){
 
-	var lastRSSIPlotMethod = null;
-
+	var lastRSSIPlotMethod = "plotFromSelect";
+	Chart.defaults.global.animation.duration = 0;
 
 
 	loadMACSBetween();
@@ -14,21 +15,14 @@ $(document).ready(function(){
 		loadMACSBetween();
 		plotChannelsBar();
 		macVendorTable();
-		if (lastRSSIPlotMethod == "plotFromSelect")
-			plotRSSILine($("#macSelect").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
-		else
-			plotRSSILine($("#busqueda_MAC").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
-
+		plotRSSILine();
 	});
 
 	$("#fecha_desde").change(function() {
 		loadMACSBetween();
 		plotChannelsBar();
 		macVendorTable();
-		if (lastRSSIPlotMethod == "plotFromSelect")
-			plotRSSILine($("#macSelect").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
-		else
-			plotRSSILine($("#busqueda_MAC").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
+		plotRSSILine();
 
 	});
 
@@ -36,10 +30,7 @@ $(document).ready(function(){
 		loadMACSBetween();
 		plotChannelsBar();
 		macVendorTable();
-		if (lastRSSIPlotMethod == "plotFromSelect")
-			plotRSSILine($("#macSelect").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
-		else
-			plotRSSILine($("#busqueda_MAC").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
+		plotRSSILine();
 
 	});
 
@@ -107,7 +98,10 @@ $(document).ready(function(){
 				url: 'getMACS.php',
 				type: 'post',
 				datatype: 'json',
-				data: {'method':'searchMAC','MAC':valor},
+				data: 	{
+						'method':'searchMAC',
+						'MAC':valor
+						},
 				success:  function (response) 
 				{
 					var cadena = "";
@@ -137,15 +131,36 @@ $(document).ready(function(){
 
 
 
-	function plotRSSILine(_MAC,_desde,_hasta)
-	{
+	function plotRSSILine()
+	{	
+		
+		datas  =
+		{
+			'method': 'RSSIfromMAC',
+			'fecha_desde':$("#fecha_desde").val(),
+			'fecha_hasta':$("#fecha_hasta").val(),
+			'device':$("#deviceSelect").val()
+		};
+	
+		if (lastRSSIPlotMethod == "plotFromSelect")
+		{
+			datas.MAC=$("#macSelect").val();
+		}
+		else
+		{
+			datas.MAC=$("#busqueda_MAC").val();
+		}
+
+		
+
 		$.ajax({
 			url: 'getMACS.php',
 			type: 'post',
 			datatype: 'json',
-			data: {'method':'RSSIfromMAC','MAC':_MAC,'fecha_desde':_desde,'fecha_hasta':_hasta,'device':$("#deviceSelect").val()},
+			data: datas,
 			success:  function (response) {
 				//console.log(response);
+				
 				var time = []
 				var rssi = [];				
 				myObj = JSON.parse(response);
@@ -234,22 +249,23 @@ $(document).ready(function(){
 
 			}
 		});
-		getMacLastChannel(_MAC);
-		getMacVendor(_MAC);
+		getMacLastChannel(datas.MAC);
+		getMacVendor(datas.MAC);
+		setTimeout(plotRSSILine, 3000);
 
 	}
 
 	$("#plot_button").click(function() 
 	{
 		lastRSSIPlotMethod="plotFromSelect";
-		plotRSSILine($("#macSelect").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
+		plotRSSILine();
 
 	});
 
 	$("#plot_button_from_search").click(function() 
 	{
 		lastRSSIPlotMethod="plotFromSearch";
-		plotRSSILine($("#busqueda_MAC").val(),$("#fecha_desde").val(),$("#fecha_hasta").val());
+		plotRSSILine();
 	});
 
 
@@ -290,7 +306,12 @@ function plotChannelsBar()
 		url: 'getMACS.php',
 		type: 'post',
 		datatype: 'json',
-		data: {'method':'getChannels','device':$("#deviceSelect").val(),'fecha_desde':$("#fecha_desde").val(),'fecha_hasta':$("#fecha_hasta").val()},
+		data: 	{
+					'method':'getChannels',
+					'device':$("#deviceSelect").val(),
+					'fecha_desde':$("#fecha_desde").val(),
+					'fecha_hasta':$("#fecha_hasta").val()
+				},
 		success:  function (response) {
 			console.log(response);
 			var channel = []
@@ -332,7 +353,7 @@ function plotChannelsBar()
 		}
 	});
 
-	setTimeout(plotChannelsBar, 60000); // you could choose not to continue on failure...
+	setTimeout(plotChannelsBar, 3000); // you could choose not to continue on failure...
 }
 
 function getMacVendor(_MAC)
@@ -341,7 +362,11 @@ function getMacVendor(_MAC)
 		url: 'getMACS.php',
 		type: 'post',
 		datatype: 'json',
-		data: {'method':'getVendorFromMAC','device':$("#deviceSelect").val(),'MAC':_MAC},
+		data: 	{
+					'method':'getVendorFromMAC',
+					'device':$("#deviceSelect").val(),
+					'MAC':_MAC
+				},
 		success:  function (response) {
 						
 			myObj = JSON.parse(response);
@@ -358,7 +383,11 @@ function getMacLastChannel(_MAC)
 		url: 'getMACS.php',
 		type: 'post',
 		datatype: 'json',
-		data: {'method':'getlastChannelFromMAC','device':$("#deviceSelect").val(),'MAC':_MAC},
+		data: 	{
+					'method':'getlastChannelFromMAC',
+					'device':$("#deviceSelect").val(),
+					'MAC':_MAC
+				},
 		success:  function (response) {
 			myObj = JSON.parse(response);
 			var channel=myObj[0].channel;
@@ -374,7 +403,12 @@ function macVendorTable()
 		url: 'getMACS.php',
 		type: 'post',
 		datatype: 'json',
-		data: {'method':'getStatsVendors','device':$("#deviceSelect").val(),'fecha_desde':$("#fecha_desde").val(),'fecha_hasta':$("#fecha_hasta").val()},
+		data: 	{
+					'method':'getStatsVendors',
+					'device':$("#deviceSelect").val(),
+					'fecha_desde':$("#fecha_desde").val(),
+					'fecha_hasta':$("#fecha_hasta").val()
+				},
 		success:  function (response) {
 			console.log($("#deviceSelect").val());
 	
@@ -397,7 +431,7 @@ function macVendorTable()
 
 		}
 	});
-	setTimeout(macVendorTable, 60000); // you could choose not to continue on failure...
+	setTimeout(macVendorTable, 6000); // you could choose not to continue on failure...
 		
 }
 

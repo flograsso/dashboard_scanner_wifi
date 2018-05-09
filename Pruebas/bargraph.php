@@ -85,48 +85,9 @@
 
             <hr>
 
-            <!-- PANEL DE CONTROL-->
-            <div class="panel panel-default" style="margin-top: 80px;">
-                <div class="panel-heading">
-                    <b>Variables</b>
-                </div>
-                <div class="panel-body">
-                    <div class="row">
-
-                        <div class="col-sm">
-                            <label >Desde:</label>
-                            <input class="form-control" type="datetime-local" id="fecha_desde">
-
-                        </div>
-
-                        <div class="col-sm">
-                            <label >Hasta:</label>
-                            <input class="form-control" type="datetime-local" id="fecha_hasta">
-
-                        </div>
-
-                        <div class="col-sm">
-                            <label for="sel1">Device</label>
-                            <select
-                                style="height:35px; "
-                                class="form-control"
-                                name="deviceSelect"
-                                id="deviceSelect">
-                                <option value="1">ESP32</option>
-                                <option value="2">ESP8266</option>
-                                <option value="%">All</option>
-
-                            </select>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-            <!-- FIN PANEL DE CONTROL-->
 
             <!-- PLOTEO DE MAC-->
-            <div class="panel panel-default">
+            <div class="panel panel-default" style="margin-top: 80px;">
                 <div class="panel-heading">
                     <b>Ploteo de MAC</b>
                 </div>
@@ -164,7 +125,7 @@
                                 <div class="col-sm">
                                     <div style="margin-top: 25px;" id="macVendor"></div>
                                 </div>
-                                 <div class="col-sm">
+                                <div class="col-sm">
                                     <div style="margin-top: 25px;" id="lastChannel"></div>
                                 </div>
                             </div>

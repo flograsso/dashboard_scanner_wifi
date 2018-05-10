@@ -85,7 +85,6 @@
 
             <hr>
 
-
             <!-- PLOTEO DE MAC-->
             <div class="panel panel-default" style="margin-top: 80px;">
                 <div class="panel-heading">
@@ -151,7 +150,8 @@
                         <div class="col-xl-3 col-sm-6 mb-3">
                             <div class="card text-white bg-primary o-hidden ">
                                 <p>
-                                    <b>MACS Totales</b>
+                                    <b>Nro MACS</b>
+                                    (últimos 5 min)
                                 </p>
                                 <h2 id="macsTotales" align='center'></h2>
 
@@ -227,24 +227,70 @@
             </div>
             <!-- FIN MAC VENDORS-->
 
-        </div>
+            <!-- ENTORNO-->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <b>Análisis Entorno</b>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm">
+                            <button
+                                type="button"
+                                class="btn btn-success btn-lg"
+                                style="margin-top: 20px;margin-bottom: 20px;"
+                                id="congelar">Congelar Entorno</button>
 
-        <!-- javascript -->
-        <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script
-            language="JavaScript"
-            type="text/javascript"
-            src="../vendor/jquery/jquery.min.js"></script>
-        <script
-            language="JavaScript"
-            type="text/javascript"
-            src="../vendor/chart.js/Chart.min.js"></script>
-        <script language="JavaScript" type="text/javascript" src="js/app.js"></script>
-        <script
-            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <link
-            rel="stylesheet"
-            href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                            <button
+                                type="button"
+                                class="btn btn-success btn-lg"
+                                style="margin-top: 20px;margin-bottom: 20px;"
+                                id="agregarEntorno">Agregar entorno</button>
 
-    </body>
-</html>
+                            <img
+                                style="margin-left: 10px;display:none;"
+                                id="imgLoading"
+                                src="./loading.gif"
+                                width='54'
+                                height='54'/>
+
+                            <button
+                                type="button"
+                                class="btn btn-danger btn-sm"
+                                style="margin-top: 20px;margin-bottom: 20px;"
+                                id="monitorear">Monitorear</button>
+
+                        </div>
+
+                        <div class="col-sm">
+                            <div style="margin-top: 28px;" id="cantMACCongeladas"></div>
+                        </div>
+                    </div>
+                    <div id="fila1" class="row">
+
+                    </div>
+                </div>
+                <!-- FIN ENTORNO-->
+
+            </div>
+
+            <!-- javascript -->
+            <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+            <script src="https://momentjs.com/downloads/moment.min.js"></script>
+            <script
+                language="JavaScript"
+                type="text/javascript"
+                src="../vendor/jquery/jquery.min.js"></script>
+            <script
+                language="JavaScript"
+                type="text/javascript"
+                src="../vendor/chart.js/Chart.min.js"></script>
+            <script language="JavaScript" type="text/javascript" src="js/app.js"></script>
+            <script
+                src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+            <link
+                rel="stylesheet"
+                href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+        </body>
+    </html>

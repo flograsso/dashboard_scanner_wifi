@@ -1,69 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
-  <meta charset="utf-8">
-  <style type="text/css">
-            #chart-container {
-                width: auto;
-                height: auto;
-            }
-            .table td.fit,
-            .table th.fit {
-                white-space: nowrap;
-                width: 1%;
-            }
-        </style>
-    
 
-        <style type="text/css">
-            #chart-container {
-                width: auto;
-                height: auto;
-            }
-            .table td.fit,
-            .table th.fit {
-                white-space: nowrap;
-                width: 1%;
-            }
-        </style>
-    
-
-        <!-- Bootstrap core CSS-->
-        <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Custom fonts for this template-->
-        <link
-            href="../vendor/font-awesome/css/font-awesome.min.css"
-            rel="stylesheet"
-            type="text/css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script
-            language="JavaScript"
-            type="text/javascript"
-            src="../vendor/jquery/jquery.min.js"></script>
-   
-  
 </head>
 <body>
 
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">WebSiteName</a>
-    </div>
-    <ul class="nav navbar-nav">
-      <li class="active"><a href="#">Home</a></li>
-      <li><a href="#">Page 1</a></li>
-      <li><a href="#">Page 2</a></li>
-      <li><a href="#">Page 3</a></li>
-    </ul>
-  </div>
-</nav>
-  
-<div class="container">
-  <h3>Basic Navbar Example</h3>
-  <p>A navigation bar is a navigation header that is placed at the top of the page.</p>
-</div>
+<?php
+include("connection.php");
+$sql ="SELECT DISTINCT(`MAC`) FROM `data` WHERE TIMESTAMPDIFF(MINUTE,time,CURRENT_TIMESTAMP())>5";
+$result = $conn->query($sql);
+//echo "Numero de filas" . $result->num_rows;
 
+if ($result->num_rows > 0) 
+		{
+			// output data of each row
+			while($row = $result->fetch_assoc()) 
+		    {
+                    $sql = "INSERT INTO entorno (MAC) VALUES (\"". $row["MAC"]."\")";
+                    if ($conn->query($sql) === TRUE) {
+                        echo "New record created successfully";
+                    } else {
+                        echo "Error: " . $sql . "<br>" . $conn->error;
+                    }
+
+		    }
+		}       
+        echo $result->num_rows;
+		//free memory associated with result
+
+		$result->close();
+		//close connection
+		$conn->close();
+		//now print the data
+		
+?>
 </body>
 </html>

@@ -2,6 +2,7 @@
 $(document).ready(function(){
 
 	var lastRSSIPlotMethod = "plotFromSelect";
+	var monitoreando = false;
 	Chart.defaults.global.animation.duration = 0;
 
 
@@ -15,14 +16,14 @@ $(document).ready(function(){
 		loadMACSBetween();
 		plotChannelsBar();
 		macVendorTable();
-		plotRSSILine();
+		plotFromSelectBox();
 	});
 
 	$("#fecha_desde").change(function() {
 		loadMACSBetween();
 		plotChannelsBar();
 		macVendorTable();
-		plotRSSILine();
+		plotFromSelectBox();
 
 	});
 
@@ -30,59 +31,71 @@ $(document).ready(function(){
 		loadMACSBetween();
 		plotChannelsBar();
 		macVendorTable();
-		plotRSSILine();
+		plotFromSelectBox();
 
 	});
 
 
 
-	/*	
+
+
+function checkNewsNotFreeze()
+{
+
+}
+
+function freezeEnviroment()
+{
 	$.ajax({
-		
-		url: "http://localhost:8088/boot/pruebas/data.php",
-		method: "GET",
-		success: function(data) {
-			console.log(data);
-			var rssi = [];
-
-			for(var i in data) {
-				rssi.push((-1)*Number(data[i].rssi));
-				console.log(rssi[i]);
-
-			}
-
-
-
-			var ctx = $("#mycanvas");
-			var myLineChart = new Chart(ctx, {
-			  type: 'line',
-			  data: {
-			    labels: ["a","b","c"],
-			    datasets: [{	
-
-			      backgroundColor: "rgba(2,117,216,0.2)",
-			      borderColor: "rgba(2,117,216,1)",
-
-			      pointBackgroundColor: "rgba(2,117,216,1)",
-			      pointBorderColor: "rgba(255,255,255,0.8)",
-
-			      pointHoverBackgroundColor: "rgba(2,117,216,1)",
-
-			      data:rssi,
-			    }],
-			  },
-			  options: {
-
-			  }
-			});
-
+		url: 'getMACS.php',
+		type: 'post',
+		datatype: 'json',
+		data: 	{
+					'method':'congelarEntorno'
+				},
+		beforeSend: function () {
+			$('#imgLoading').show();
+			$('#monitorear').hide();
 		},
-		error: function(data) {
-			console.log("data");
+		complete: function () {
+			$("#imgLoading").hide();
+			$('#monitorear').show();
+		},
+		success:  function (response) {
+			var cadena = "<b>Cantidad de MACs Congeladas: </b>"+response;
+			$("#cantMACCongeladas").html(cadena);
 			
+		
 		}
 	});
-*/
+}
+
+function addEnviroment()
+{
+	$.ajax({
+		url: 'getMACS.php',
+		type: 'post',
+		datatype: 'json',
+		data: 	{
+					'method':'agregarEntorno'
+				},
+		beforeSend: function () {
+			$('#imgLoading').show();
+		},
+		complete: function () {
+			$("#imgLoading").hide();
+		},
+		success:  function (response) {
+				
+			myObj = JSON.parse(response);
+			var cadena = "<b>MACs Agregadas: </b>"+myObj.agregados+"<b> MACs Repetidas: </b>"+myObj.repetidos;
+			$("#cantMACCongeladas").html(cadena);
+		
+		}
+		
+	});
+}
+
 	$("#busqueda_MAC").keyup(function() {
 		var valor=$("#busqueda_MAC").val();
 		$("#livesearch").html("");
@@ -128,12 +141,8 @@ $(document).ready(function(){
 
 	});
 
-
-
-
-	function plotRSSILine()
-	{	
-		
+	function plotFromSelectBox()
+	{
 		datas  =
 		{
 			'method': 'RSSIfromMAC',
@@ -141,7 +150,7 @@ $(document).ready(function(){
 			'fecha_hasta':$("#fecha_hasta").val(),
 			'device':$("#deviceSelect").val()
 		};
-	
+
 		if (lastRSSIPlotMethod == "plotFromSelect")
 		{
 			datas.MAC=$("#macSelect").val();
@@ -151,15 +160,24 @@ $(document).ready(function(){
 			datas.MAC=$("#busqueda_MAC").val();
 		}
 
-		
+		var plotrssi;
+		plotRSSILine("plotrssi",datas,plotrssi);
+		getMacLastChannel(datas.MAC);
+		getMacVendor(datas.MAC);
+		setTimeout(plotFromSelectBox, 3000);
+    
 
+	}
+
+
+	function plotRSSILine(_plotId,_datas,_graphObject)
+	{	
 		$.ajax({
 			url: 'getMACS.php',
 			type: 'post',
 			datatype: 'json',
-			data: datas,
+			data: _datas,
 			success:  function (response) {
-				//console.log(response);
 				
 				var time = []
 				var rssi = [];				
@@ -172,9 +190,11 @@ $(document).ready(function(){
 				var chartdata = 
 				{
 					type: 'line',
-					data: {
+					data: 
+					{
 						labels:time,
-						datasets: [{
+						datasets: 
+							[{
 							data: rssi,
 							label: "rssi+100",
 							backgroundColor: "rgba(241, 0, 0, 1)",
@@ -182,90 +202,96 @@ $(document).ready(function(){
 							fill:false,
 							
 						}],
-						/*
-						datasets: [{
-							label: "Sessions",
-							lineTension: 0.3,
-							backgroundColor: "rgba(2,117,216,0.2)",
-							borderColor: "rgba(2,117,216,1)",
-							pointRadius: 5,
-							pointBackgroundColor: "rgba(2,117,216,1)",
-							pointBorderColor: "rgba(255,255,255,0.8)",
-							pointHoverRadius: 5,
-							pointHoverBackgroundColor: "rgba(2,117,216,1)",
-							pointHitRadius: 20,
-							pointBorderWidth: 2,
-							data: rssi,
-						}],
-						*/
 					},
 					options: {
 						scales: {
 							xAxes: [{
-								time: {
-									unit: 'date'
-								},
-								ticks: {
-									maxTicksLimit: 1000
-								}
-							}]
+								type: 'time',
+								
+								
+				
+							}]	
 
 						}
-						/*
-						scales: {
-							xAxes: [{
-								time: {
-									unit: 'date'
-								},
-								gridLines: {
-									display: false
-								},
-								ticks: {
-									maxTicksLimit: 200
-								}
-							}],
-							yAxes: [{
-								ticks: {
-									min: 0,
-									max: 100,
-									maxTicksLimit: 200
-								},
-								gridLines: {
-									color: "rgba(0, 0, 0, .125)",
-								}
-							}],
-						},
-						legend: {
-							display: false
-						}
-						*/
 					}
 				};
 
-				var ctx = $('#plotrssi');
+				var ctx = $('#'+_plotId);
 				//Esta linea es para que el grafico no muestre valores viejos. (una especie de lag)
-				plotrssi && plotrssi.chart && plotrssi.chart.destroy();
-				plotrssi = new Chart(ctx,chartdata);
+				_graphObject && _graphObject.chart && _graphObject.chart.destroy();
+				_graphObject = new Chart(ctx,chartdata);
 
 			}
 		});
-		getMacLastChannel(datas.MAC);
-		getMacVendor(datas.MAC);
-		setTimeout(plotRSSILine, 3000);
+
 
 	}
+
+	$("#monitorear").click(function() 
+	{
+		$("#monitorear").attr("disabled", true);
+		monitoreando=true;
+
+		$.ajax({
+			url: 'getMACS.php',
+				type: 'post',
+				datatype: 'json',
+				data: {'method':'checkNewsNotFreeze'},
+				success:  function (response) {
+					myObj = JSON.parse(response);
+					var i = 0;
+
+					datas  =
+					{
+						'method': 'RSSIfromMAC',
+						'fecha_desde':$("#fecha_desde").val(),
+						'fecha_hasta':$("#fecha_hasta").val(),
+						'device':$("#deviceSelect").val()
+					};
+
+					for (x in myObj) {
+						datas.MAC=myObj[x].MAC;
+						$("#fila1").append('<div  class="col-sm"> <div id="chart-container"><canvas id="plotrssi'+i+'"></canvas></div></div>');
+						plotRSSILine("plotrssi"+i,datas);
+						i++;
+					}
+					
+				
+					
+					
+				
+			
+	
+				}
+		});
+
+
+
+	});
+
+	$("#congelar").click(function() 
+	{
+		freezeEnviroment();
+
+	});
+
+	$("#agregarEntorno").click(function() 
+	{
+		addEnviroment();
+
+	});
 
 	$("#plot_button").click(function() 
 	{
 		lastRSSIPlotMethod="plotFromSelect";
-		plotRSSILine();
+		plotFromSelectBox();
 
 	});
 
 	$("#plot_button_from_search").click(function() 
 	{
 		lastRSSIPlotMethod="plotFromSearch";
-		plotRSSILine();
+		plotFromSelectBox();
 	});
 
 

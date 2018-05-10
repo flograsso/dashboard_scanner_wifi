@@ -46,27 +46,8 @@ switch ($METHOD)
 
 	case "getNumberofMACS":
 		$device=$_POST["device"];
-		$fecha_desde=$_POST["fecha_desde"];
-		$fecha_hasta=$_POST["fecha_hasta"];
-
-
-		if ($fecha_desde!= "" && $fecha_hasta!= ""){
-			//query to get data from the table
-			$sql = "SELECT COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE `device` LIKE '$device' AND (time BETWEEN '$fecha_desde' AND '$fecha_hasta')";
-		}
-		elseif  ($fecha_desde != ""){
-			$sql = "SELECT COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE `device` LIKE '$device' AND time >'$fecha_desde'";
-		}
-		elseif ($fecha_hasta != ""){
-			$sql = "SELECT COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE `device` LIKE '$device' AND time <'$fecha_hasta'";
-	
-		}
-		else{
-			$sql = "SELECT COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE `device` LIKE '$device'";
-		}
-
-
-		
+		//query to get data from the table
+		$sql = "SELECT COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE `device` LIKE '$device' AND TIMESTAMPDIFF(MINUTE,time,CURRENT_TIMESTAMP())<3";
 		$result = $conn->query($sql);
 		$outp = array();
 		$row = $result->fetch_assoc();
@@ -74,6 +55,7 @@ switch ($METHOD)
 		$conn->close();
 		echo $row['count'];
 		break;
+
 	case "getNumbersNews":
 		$device=$_POST["device"];
 		$sql = "SELECT COUNT(DISTINCT(MAC)) AS `count` FROM `data` WHERE (TIMESTAMPDIFF(MINUTE,`time`,CURRENT_TIMESTAMP())<1) AND `device` LIKE '$device'";
@@ -207,6 +189,86 @@ switch ($METHOD)
 		$conn->close();
 		//now print the data
 		echo json_encode($outp);
+		break;
+	
+	case "congelarEntorno":
+		//Elimino datos de DB
+		$sql="DELETE FROM `entorno` WHERE 1";
+		$conn->query($sql);
+
+		$sql ="SELECT DISTINCT(`MAC`) FROM `data` WHERE TIMESTAMPDIFF(MINUTE,time,CURRENT_TIMESTAMP())>5";
+		$result = $conn->query($sql);
+		//echo "Numero de filas" . $result->num_rows;
+		$agregados = 0;
+		if ($result->num_rows > 0) 
+		{
+			// output data of each row
+			while($row = $result->fetch_assoc()) 
+		    {
+					$sql = "INSERT INTO entorno (MAC) VALUES (\"". $row["MAC"]."\")";
+					if ($conn->query($sql) === TRUE) {
+						$agregados=$agregados+1;
+					} 
+		    }
+		}       
+				
+		//free memory associated with result
+
+		$result->close();
+		//close connection
+		$conn->close();
+		//now print the data
+		echo $agregados;
+
+		break;
+
+	case "agregarEntorno":
+
+		$sql ="SELECT DISTINCT(`MAC`) FROM `data` WHERE TIMESTAMPDIFF(MINUTE,time,CURRENT_TIMESTAMP())>5";
+		$result = $conn->query($sql);
+		//echo "Numero de filas" . $result->num_rows;
+
+		$contador = new \stdClass(); //Omito una alerta de objeto no creado
+		$contador->agregados = 0;
+		$contador->repetidos = 0;
+
+		if ($result->num_rows > 0) 
+		{
+			// output data of each row
+			while($row = $result->fetch_assoc()) 
+		    {
+					$sql = "INSERT INTO entorno (MAC) VALUES (\"". $row["MAC"]."\")";
+                        if ($conn->query($sql) === TRUE) {
+							$contador->agregados=($contador->agregados)+1;
+                    } else {
+						$contador->repetidos=($contador->repetidos)+1;
+                    }
+		    }
+		}       
+				
+		//free memory associated with result
+
+		$result->close();
+		//close connection
+		$conn->close();
+		//now print the data
+		echo json_encode($contador);
+		break;
+
+
+	case "checkNewsNotFreeze":
+		$sql ="SELECT DISTINCT(t1.MAC) FROM `data` t1 LEFT OUTER JOIN `entorno` t2 ON t1.MAC=t2.MAC WHERE t2.MAC IS NULL;";
+		//execute query
+		$result = $conn->query($sql);
+		$outp = array();
+		$outp = $result->fetch_all(MYSQLI_ASSOC);
+		//free memory associated with result
+		$result->close();
+		//close connection
+		$conn->close();
+		//now print the data
+		echo json_encode($outp);
+
 		break;
 
 	default:

@@ -265,32 +265,65 @@
                         <div class="col-sm">
                             <div style="margin-top: 28px;" id="cantMACCongeladas"></div>
                         </div>
-                    </div>
-                    <div id="fila1" class="row">
 
                     </div>
+                    <div class="row">
+                        <div class="col-sm-1">
+                        <label for="pwd">Dias a graficar</label>
+                        <input type="text" class="form-control" id="minAtras" value=0>
+                        </div>
+                    </div>
+                    <!-- PANEL DE CONTROL-->
+
+                    <div style="margin-top: 40px;" class="row">
+                        <div class="col-xl-3 col-sm-6 mb-3">
+                            <div class="card text-white bg-primary o-hidden ">
+                                <p>
+                                    <b>Nro MACS</b>
+                                    (nuevas)
+                                </p>
+                                <h2 id="nroMacsNotFreeze" align='center'></h2>
+
+                            </div>
+
+                        </div>
+                        <div class="col-xl-3 col-sm-6 mb-3">
+                            <div class="card text-white bg-warning o-hidden ">
+                                <p>
+                                    <b>Novedades</b>
+                                </p>
+                                <h2 id="novedades" align='center'></h2>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- FIN PANEL DE CONTROL-->
+                    <div id="multiGraph">
+                        <div/>
+
+                    </div>
+                    <!-- FIN ENTORNO-->
+
                 </div>
-                <!-- FIN ENTORNO-->
 
-            </div>
+                <!-- javascript -->
+                <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+                <script src="https://momentjs.com/downloads/moment.min.js"></script>
+                <script
+                    language="JavaScript"
+                    type="text/javascript"
+                    src="../vendor/jquery/jquery.min.js"></script>
+                <script
+                    language="JavaScript"
+                    type="text/javascript"
+                    src="../vendor/chart.js/Chart.min.js"></script>
+                <script language="JavaScript" type="text/javascript" src="js/app.js"></script>
+                <script
+                    src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+                <link
+                    rel="stylesheet"
+                    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-            <!-- javascript -->
-            <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-            <script src="https://momentjs.com/downloads/moment.min.js"></script>
-            <script
-                language="JavaScript"
-                type="text/javascript"
-                src="../vendor/jquery/jquery.min.js"></script>
-            <script
-                language="JavaScript"
-                type="text/javascript"
-                src="../vendor/chart.js/Chart.min.js"></script>
-            <script language="JavaScript" type="text/javascript" src="js/app.js"></script>
-            <script
-                src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-            <link
-                rel="stylesheet"
-                href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-        </body>
-    </html>
+            </body>
+        </html>

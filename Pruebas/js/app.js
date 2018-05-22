@@ -3,6 +3,9 @@ $(document).ready(function(){
 
 	var lastRSSIPlotMethod = "plotFromSelect";
 	var monitoreando = false;
+	var fechaMonitoreo;
+	var newsMacs = 	[];
+	var newsMacsPlotObject = [];
 	Chart.defaults.global.animation.duration = 0;
 
 
@@ -41,7 +44,52 @@ $(document).ready(function(){
 
 function checkNewsNotFreeze()
 {
+	
+	$.ajax({
+		url: 'getMACS.php',
+		type: 'post',
+		datatype: 'json',
+		data: 	
+		{
+			'method':'checkNewsNotFreeze'
+		},
+		success:  function (response) {			
+			myObj = JSON.parse(response);
+			//alert(response);	
+			$('#nroMacsNotFreeze').text(myObj.length);
+			
+			for (x in myObj)
+			{
+				if (newsMacs.indexOf(myObj[x].MAC) == -1)
+				{
+					newsMacs.push(myObj[x].MAC);
+					i=newsMacs.indexOf(myObj[x].MAC);
+					$("#multiGraph").append('<div class="col-sm"> <div class="row"> <div class="col-sm"><div style="margin-top: 25px;" id="MAC'+i+'"></div></div><div class="col-sm"><div style="margin-top: 25px;" id="macVendor'+i+'"></div></div><div class="col-sm"><div style="margin-top: 25px;" id="lastChannel'+i+'"></div></div></div></div><div  class="col-sm"> <div id="chart-container"><canvas id="plotrssi'+i+'"></canvas></div></div>');
+				}
 
+				i=newsMacs.indexOf(myObj[x].MAC);
+
+
+				datas  =
+							{
+								'method': 'RSSIfromMAC',
+								'fecha_desde':fechaMonitoreo,
+								'fecha_hasta':'',
+								'device':$("#deviceSelect").val(),
+								'MAC':myObj[x].MAC,
+							};
+					
+						$("#MAC"+i).html("<b>MAC: </b>"+myObj[x].MAC);
+						getMacLastChannel(myObj[x].MAC,"lastChannel"+i);
+						getMacVendor(myObj[x].MAC,"macVendor"+i);
+						
+						plotRSSILine("plotrssi"+i,datas,newsMacsPlotObject[i]);	
+
+
+			}
+		}
+	});
+	setTimeout(checkNewsNotFreeze, 3000); // you could choose not to continue on failure...
 }
 
 function freezeEnviroment()
@@ -162,8 +210,8 @@ function addEnviroment()
 
 		var plotrssi;
 		plotRSSILine("plotrssi",datas,plotrssi);
-		getMacLastChannel(datas.MAC);
-		getMacVendor(datas.MAC);
+		getMacLastChannel(datas.MAC,"lastChannel");
+		getMacVendor(datas.MAC,"macVendor");
 		setTimeout(plotFromSelectBox, 3000);
     
 
@@ -178,10 +226,10 @@ function addEnviroment()
 			datatype: 'json',
 			data: _datas,
 			success:  function (response) {
-				
+				//alert(response);	
 				var time = []
 				var rssi = [];				
-				myObj = JSON.parse(response);
+				myObj = JSON.parse(response);	
         		for (x in myObj) {
 						time.push(myObj[x].time);
 						rssi.push(100+Number(myObj[x].rssi));
@@ -230,40 +278,14 @@ function addEnviroment()
 	$("#monitorear").click(function() 
 	{
 		$("#monitorear").attr("disabled", true);
+		fechaMonitoreo="";
+		if ($("#minAtras").val()!=0)
+		{
+			fechaMonitoreo= (new Date().setDate(new Date().getDate - $("#minAtras").val())).toISOString().slice(0,19);
+		}
 		monitoreando=true;
 
-		$.ajax({
-			url: 'getMACS.php',
-				type: 'post',
-				datatype: 'json',
-				data: {'method':'checkNewsNotFreeze'},
-				success:  function (response) {
-					myObj = JSON.parse(response);
-					var i = 0;
-
-					datas  =
-					{
-						'method': 'RSSIfromMAC',
-						'fecha_desde':$("#fecha_desde").val(),
-						'fecha_hasta':$("#fecha_hasta").val(),
-						'device':$("#deviceSelect").val()
-					};
-
-					for (x in myObj) {
-						datas.MAC=myObj[x].MAC;
-						$("#fila1").append('<div  class="col-sm"> <div id="chart-container"><canvas id="plotrssi'+i+'"></canvas></div></div>');
-						plotRSSILine("plotrssi"+i,datas);
-						i++;
-					}
-					
-				
-					
-					
-				
-			
-	
-				}
-		});
+		checkNewsNotFreeze();
 
 
 
@@ -382,7 +404,7 @@ function plotChannelsBar()
 	setTimeout(plotChannelsBar, 3000); // you could choose not to continue on failure...
 }
 
-function getMacVendor(_MAC)
+function getMacVendor(_MAC,_idElement)
 {
 	$.ajax({
 		url: 'getMACS.php',
@@ -398,12 +420,12 @@ function getMacVendor(_MAC)
 			myObj = JSON.parse(response);
 			var vendor=myObj[0].mac_vendor;
 			var cadena = "<b>MAC vendor: </b>"+vendor;
-			$("#macVendor").html(cadena);
+			$("#"+_idElement).html(cadena);
 		}
 	});
 }
 
-function getMacLastChannel(_MAC)
+function getMacLastChannel(_MAC,_idElement)
 {
 	$.ajax({
 		url: 'getMACS.php',
@@ -418,7 +440,7 @@ function getMacLastChannel(_MAC)
 			myObj = JSON.parse(response);
 			var channel=myObj[0].channel;
 			var cadena = "<b>Last Channel: </b>"+channel;
-			$("#lastChannel").html(cadena);
+			$("#"+_idElement).html(cadena);
 		}
 	});
 }

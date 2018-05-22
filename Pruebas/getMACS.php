@@ -196,7 +196,7 @@ switch ($METHOD)
 		$sql="DELETE FROM `entorno` WHERE 1";
 		$conn->query($sql);
 
-		$sql ="SELECT DISTINCT(`MAC`) FROM `data` WHERE TIMESTAMPDIFF(MINUTE,time,CURRENT_TIMESTAMP())>5";
+		$sql ="SELECT DISTINCT(`MAC`) FROM `data` WHERE TIMESTAMPDIFF(MINUTE,`time`,CURRENT_TIMESTAMP())<10";
 		$result = $conn->query($sql);
 		//echo "Numero de filas" . $result->num_rows;
 		$agregados = 0;
@@ -224,7 +224,7 @@ switch ($METHOD)
 
 	case "agregarEntorno":
 
-		$sql ="SELECT DISTINCT(`MAC`) FROM `data` WHERE TIMESTAMPDIFF(MINUTE,time,CURRENT_TIMESTAMP())>5";
+		$sql ="SELECT DISTINCT(`MAC`) FROM `data` WHERE TIMESTAMPDIFF(MINUTE,`time`,CURRENT_TIMESTAMP())<10";
 		$result = $conn->query($sql);
 		//echo "Numero de filas" . $result->num_rows;
 
